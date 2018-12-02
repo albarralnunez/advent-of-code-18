@@ -1,20 +1,18 @@
 from collections import Counter
-from copy import copy
 from dataclasses import dataclass, field
-from typing import Set, Union, Dict
+from typing import Set, Union
 
 from src.libs.problem import Problem
 
 
 @dataclass(frozen=True)
-class RepeatedID:
+class CleanedID:
     value: str
-    original: str
+    original: str = field(compare=False)
 
 
 @dataclass(unsafe_hash=True)
 class ID:
-
     value: str
     counter: Counter = field(
         init=False, repr=False, compare=False, default=None)
@@ -26,26 +24,21 @@ class ID:
 
     def different_elements(self):
         elements = set()
-        enum_value = list(enumerate(self.value))
-        for i, x in enum_value:
-            val = copy(enum_value)
-            del val[i]
-            original = self.value[:i] + self.value[i + 1:]
-            final_value = set(val)
-            elements.add(RepeatedID(value=str(final_value), original=original))
+        for i in range(len(self.value)):
+            val = self.value[:i] + self.value[i + 1:]
+            elements.add(CleanedID(value=val, original=self.value))
         return elements
 
 
 @dataclass
 class DictDiffIDs:
+    values: Set[CleanedID] = field(default_factory=set)
 
-    values: Dict[str, str] = field(default_factory=dict)
-
-    def add(self, values: Set[RepeatedID]) -> Union[RepeatedID, None]:
+    def add(self, values: Set[CleanedID]) -> Union[CleanedID, None]:
         for val in values:
-            if val.value in self.values:
+            if val in self.values:
                 return val
-            self.values[val.value] = val.original
+            self.values.add(val)
 
 
 class Day2Problem1(Problem):
@@ -72,5 +65,4 @@ class Day2Problem2(Problem):
         for id_value in ids:
             find_repeated = id_dict.add(id_value.different_elements())
             if find_repeated:
-                return find_repeated.original
-
+                return find_repeated

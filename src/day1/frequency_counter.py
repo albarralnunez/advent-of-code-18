@@ -1,5 +1,6 @@
 import dataclasses
 import operator
+from itertools import cycle
 from typing import List
 
 from src.day1.exceptions import NoResultError
@@ -32,10 +33,10 @@ class FirstFrequencyMatch(FrequencyCounterBase):
 
     def apply(self, *instructions: List[Instruction]):
         values = {0}
-        for instruction in instructions:
+        for instruction in cycle(instructions):
             op = self.INSTRUCTIONS[instruction.instruction_type]
             self.counter = op(self.counter, instruction.value)
             if self.counter in values:
                 return self.counter
             values.add(self.counter)
-        raise NoResultError(f"No result exception counter value {self.counter}.")
+        raise NoResultError(f"No result found. Counter value {self.counter}.")

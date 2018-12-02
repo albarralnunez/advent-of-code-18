@@ -13,7 +13,7 @@ class InputParser:
     def parse(self):
         instructions = InstructionSet()
         for line in self._input_file.readlines():
-            parser = self._line_parser(line)
+            parser = self._line_parser(line.strip())
             instruction = parser.parse()
             instructions.append(instruction)
         return instructions

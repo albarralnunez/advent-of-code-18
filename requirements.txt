@@ -3,3 +3,4 @@ pytz
 requests
 termcolor
 beautifulsoup4
+cached-property

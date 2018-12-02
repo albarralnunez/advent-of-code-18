@@ -1,12 +1,12 @@
 import argparse
 
 from src.day1.day1 import Day1Problem1, Day1Problem2
-from src.day2.day2 import Day2Problem1
+from src.day2.day2 import Day2Problem1, Day2Problem2
 from src.libs.problem import ProblemRunner
 
 PROBLEMS = {
     1: {1: Day1Problem1, 2: Day1Problem2},
-    2: {1: Day2Problem1, },
+    2: {1: Day2Problem1, 2: Day2Problem2},
 }
 
 

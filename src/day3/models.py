@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from itertools import dropwhile
 from typing import Dict, Iterable, Set
 
 
@@ -37,21 +36,32 @@ class Claim:
 @dataclass(frozen=True)
 class Fabric:
     space: Dict[Position, Set[ClaimID]] = field(default_factory=dict)
+    only_claimed_ones: Set[ClaimID] = field(default_factory=set, compare=False)
 
     @property
     def space_claims(self):
         return self.space.values()
 
+    def _remove_from_claimed_ones(self, position):
+        for claim_id_to_remove in self.space[position]:
+            if claim_id_to_remove in self.only_claimed_ones:
+                self.only_claimed_ones.remove(claim_id_to_remove)
+
     def make_claim(self, claim: Claim):
+        self.only_claimed_ones.add(claim.identifier)
         for position in claim.area.get_all_tails():
             if position in self.space:
                 self.space[position].add(claim.identifier)
+                self._remove_from_claimed_ones(position)
             else:
                 self.space[position] = {claim.identifier}
 
     def make_claims(self, claims: Iterable[Claim]):
         for claim in claims:
             self.make_claim(claim)
+
+    def __getitem__(self, item):
+        return self.space[item]
 
 
 @dataclass(frozen=True)
@@ -65,10 +75,8 @@ class Solver:
 class SingleClaimFinder(Solver):
 
     def __call__(self):
-        find_first_single_claim = dropwhile(lambda x: len(x) > 1, self.fabric.space_claims)
-        claim_ids = next(find_first_single_claim)
-        claim_id: ClaimID = claim_ids.pop()
-        return str(claim_id.value)
+        result = self.fabric.only_claimed_ones.pop()
+        return str(result.value)
 
 
 class CounterMultipleClaims(Solver):

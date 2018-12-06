@@ -11,6 +11,14 @@ class Day3Problem(Problem):
     )
 
     @property
+    def day(self):
+        raise NotImplementedError
+
+    @property
+    def problem(self):
+        raise NotImplementedError
+
+    @property
     def solver_class(self):
         raise NotImplementedError
 

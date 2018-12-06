@@ -66,19 +66,3 @@ def test_count_multiple_claims(test_input, expected):
     solver = CounterMultipleClaims(test_input)
     result = solver()
     assert result == expected
-
-
-@pytest.mark.parametrize("test_input,expected", [
-    (Fabric({
-        Position(0, 0): {ClaimID(1)}, Position(1, 0): {ClaimID(1)},
-        Position(0, 1): {ClaimID(1)}, Position(1, 1): {ClaimID(1), ClaimID(2)},
-    }), "1"),
-    (Fabric({
-        Position(0, 0): {ClaimID(1), ClaimID(2)}, Position(1, 0): {ClaimID(1), ClaimID(2)},
-        Position(0, 1): {ClaimID(1), ClaimID(2)}, Position(1, 1): {ClaimID(3)},
-    }), "3")
-])
-def test_count_single_claims(test_input, expected):
-    solver = SingleClaimFinder(fabric=test_input)
-    result = solver()
-    assert result == expected

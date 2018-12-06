@@ -4,3 +4,4 @@ requests
 termcolor
 beautifulsoup4
 cached-property
+factory_boy

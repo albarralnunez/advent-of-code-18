@@ -1,4 +1,4 @@
-## Advent of code 2016
+## Advent of code 2018
 
 This repo contains the solutions for the problems of the challenge Advent of code 2018
 
